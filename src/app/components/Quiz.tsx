@@ -1,97 +1,147 @@
 import { drugAbuseAwarenessQuiz } from "@/app/data/";
 import { cn } from "@/lib/utils";
+import Correct from "@/public/correct.svg";
+import Score from "@/public/score.svg";
+import Slipped from "@/public/slipped.svg";
+import Image from "next/image";
 import { useState } from "react";
-import { AnimatedModalDemo } from "./AnimatedModal";
-import { ModalTrigger } from "./ui/animated-modal";
 
 export default function Quiz() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const currentQuestion = drugAbuseAwarenessQuiz[currentQuestionIndex];
+  const [score, setCalculateScore] = useState<number>(0);
 
   const handleAnswerSelect = (answer: string) => {
     setSelectedAnswer((prevAnswer) => (prevAnswer === answer ? "" : answer));
   };
 
+  console.log(currentQuestionIndex);
+
   const handleSubmit = () => {
+    if (currentQuestion.correctAnswer === selectedAnswer) {
+      setCalculateScore((prevScore) => prevScore + 1);
+    }
     setShowAnswer(true);
   };
 
   const handleNext = () => {
     setShowAnswer(false);
     setSelectedAnswer(null);
-    if (currentQuestionIndex < drugAbuseAwarenessQuiz.length - 1) {
+    if (currentQuestionIndex < drugAbuseAwarenessQuiz.length) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-    } else {
-      alert("You've completed the quiz!");
     }
   };
 
   return (
     <div className="flex flex-col gap-4 pl-8 pt-12">
-      <h3 className="text-3xl font-semibold text-white">
-        {currentQuestionIndex + 1}. {currentQuestion.questionTitle}
-      </h3>
+      {!showAnswer && (
+        <>
+          {currentQuestionIndex < drugAbuseAwarenessQuiz.length && (
+            <>
+              <h3 className="text-3xl font-semibold text-white">
+                {currentQuestionIndex + 1}. {currentQuestion?.questionTitle}
+              </h3>
 
-      <div>
-        {currentQuestion.options.map((option) => (
-          <div
-            key={option}
-            className={cn(
-              "text-md mb-4 cursor-pointer rounded-lg bg-white p-4 text-black",
-              {
-                "bg-black text-white": selectedAnswer === option,
-              },
-            )}
-            onClick={() => handleAnswerSelect(option)}
-          >
-            {option}
+              <div>
+                {currentQuestion?.options.map((option) => (
+                  <div
+                    key={option}
+                    className={cn(
+                      "text-md mb-4 cursor-pointer rounded-lg bg-white p-4 text-black",
+                      {
+                        "bg-black text-white": selectedAnswer === option,
+                      },
+                    )}
+                    onClick={() => handleAnswerSelect(option)}
+                  >
+                    {option}
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </>
+      )}
+
+      {currentQuestionIndex < drugAbuseAwarenessQuiz.length && (
+        <div>
+          {!showAnswer && (
+            <div className="flex justify-end">
+              <button
+                onClick={handleSubmit}
+                disabled={!selectedAnswer}
+                className={cn("mt-4 rounded bg-white px-4 py-2 text-black", {
+                  "cursor-not-allowed bg-gray-400 text-white": !selectedAnswer,
+                })}
+              >
+                Submit
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {currentQuestionIndex === drugAbuseAwarenessQuiz.length && (
+        <>
+          <div className="flex items-center justify-center gap-12 rounded-2xl bg-white p-4 text-3xl font-semibold text-gray-700">
+            <Image src={Score} alt="score" width={200} height={200} />
+            <div>
+              <p>Score</p>
+              <p>
+                {score} / {drugAbuseAwarenessQuiz.length}
+              </p>
+            </div>
           </div>
-        ))}
-      </div>
-
-      <div>
-        {!showAnswer && (
           <div className="flex justify-end">
             <button
-              onClick={handleSubmit}
-              className="mt-4 rounded bg-green-500 px-4 py-2 text-white"
+              onClick={() => setCurrentQuestionIndex(0)}
+              className="mt-4 rounded bg-green-400 px-4 py-2 text-black"
             >
-              Submit
+              Try Again
             </button>
-            {/* <AnimatedModalDemo>
-              <ModalTrigger
-                className="group/modal-btn flex justify-center bg-black text-white dark:bg-white dark:text-black"
-                // onClick={handleSubmit}
-              >
-                <span className="text-center transition duration-500 group-hover/modal-btn:translate-x-40">
-                  Submit
-                </span>
-                <div className="absolute inset-0 z-20 flex -translate-x-40 items-center justify-center text-white transition duration-500 group-hover/modal-btn:translate-x-0">
-                  🔥
-                </div>
-              </ModalTrigger>
-            </AnimatedModalDemo> */}
           </div>
-        )}
-      </div>
+        </>
+      )}
 
       {showAnswer && (
-        <div className="">
-          {currentQuestion.correctAnswer === selectedAnswer
-            ? "Congratulations! You got it right"
-            : "Unfortunately, you got it wrong this time."}
-          <p>
-            Correct Answer: <strong>{currentQuestion.correctAnswer}</strong>
-          </p>
-          <p>{currentQuestion.answerExplanation}</p>
-          <button
-            onClick={handleNext}
-            className="mt-4 rounded bg-green-500 px-4 py-2 text-white"
-          >
-            Next
-          </button>
+        <div className="flex flex-col gap-6 text-white">
+          <div className="text-3xl font-semibold">
+            {" "}
+            {currentQuestion.correctAnswer === selectedAnswer ? (
+              <div className="flex items-center gap-4">
+                <Image src={Correct} alt="correct" width={300} height={300} />
+                Congratulations! You got it right 😃
+              </div>
+            ) : (
+              <div className="flex items-center">
+                <Image src={Slipped} alt="slipped" width={300} height={300} />
+                Unfortunately, you got it wrong this time 😪
+              </div>
+            )}
+          </div>
+
+          <div className="flex flex-col justify-start gap-2 rounded-2xl bg-white p-4 text-lg text-gray-700">
+            <p>
+              The correct answer is{" "}
+              <span className="font-bold text-black">
+                {currentQuestion.correctAnswer}.
+              </span>
+            </p>
+            <p className="italic">{currentQuestion.answerExplanation}</p>
+          </div>
+
+          <div className="flex justify-end">
+            <button
+              onClick={handleNext}
+              className="mt-4 rounded bg-blue-400 px-4 py-2 text-white"
+            >
+              Next
+            </button>
+          </div>
+
+          {/* {showScore && "yay"} */}
         </div>
       )}
     </div>
