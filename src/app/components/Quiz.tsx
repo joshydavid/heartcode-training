@@ -17,8 +17,6 @@ export default function Quiz() {
     setSelectedAnswer((prevAnswer) => (prevAnswer === answer ? "" : answer));
   };
 
-  console.log(currentQuestionIndex);
-
   const handleSubmit = () => {
     if (currentQuestion.correctAnswer === selectedAnswer) {
       setCalculateScore((prevScore) => prevScore + 1);
