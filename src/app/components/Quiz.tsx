@@ -47,9 +47,9 @@ export default function Quiz() {
                   <div
                     key={option}
                     className={cn(
-                      "text-md mb-4 cursor-pointer rounded-lg bg-white p-4 text-black",
+                      "text-md my-4 w-10/12 cursor-pointer rounded-lg bg-white p-4 text-gray-800 transition-all duration-500 ease-in-out hover:-translate-y-1 hover:scale-110",
                       {
-                        "bg-black text-white": selectedAnswer === option,
+                        "bg-gray-800 text-white": selectedAnswer === option,
                       },
                     )}
                     onClick={() => handleAnswerSelect(option)}
@@ -70,11 +70,15 @@ export default function Quiz() {
               <button
                 onClick={handleSubmit}
                 disabled={!selectedAnswer}
-                className={cn("mt-4 rounded bg-white px-4 py-2 text-black", {
-                  "cursor-not-allowed bg-gray-400 text-white": !selectedAnswer,
-                })}
+                className={cn(
+                  "mt-4 rounded bg-black px-4 py-2 text-white transition duration-500 ease-in-out hover:-translate-y-1 hover:scale-110",
+                  {
+                    "cursor-not-allowed bg-gray-400 text-white":
+                      !selectedAnswer,
+                  },
+                )}
               >
-                Submit
+                Submit 🔥
               </button>
             </div>
           )}
@@ -83,21 +87,22 @@ export default function Quiz() {
 
       {currentQuestionIndex === drugAbuseAwarenessQuiz.length && (
         <>
-          <div className="flex items-center justify-center gap-12 rounded-2xl bg-white p-4 text-3xl font-semibold text-gray-700">
+          <div className="flex items-center justify-center gap-12 rounded-2xl bg-white p-16 text-gray-700 shadow-2xl">
             <Image src={Score} alt="score" width={200} height={200} />
-            <div>
-              <p>Score</p>
-              <p>
+            <div className="flex flex-col gap-2">
+              <h2 className="text-3xl font-bold">
                 {score} / {drugAbuseAwarenessQuiz.length}
-              </p>
+              </h2>
+              <p className="text-sm font-semibold">Score</p>
             </div>
           </div>
+
           <div className="flex justify-end">
             <button
               onClick={() => setCurrentQuestionIndex(0)}
-              className="mt-4 rounded bg-green-400 px-4 py-2 text-black"
+              className="duration-400 mt-4 rounded bg-black px-4 py-2 text-white transition ease-in-out hover:-translate-y-1 hover:scale-110"
             >
-              Try Again
+              Try Again 🔥
             </button>
           </div>
         </>
@@ -105,41 +110,39 @@ export default function Quiz() {
 
       {showAnswer && (
         <div className="flex flex-col gap-6 text-white">
-          <div className="text-3xl font-semibold">
+          <div className="flex flex-col items-center text-3xl font-semibold">
             {" "}
             {currentQuestion.correctAnswer === selectedAnswer ? (
               <div className="flex items-center gap-4">
                 <Image src={Correct} alt="correct" width={300} height={300} />
-                Congratulations! You got it right 😃
+                Congratulations, you got it right! 😃
               </div>
             ) : (
-              <div className="flex items-center">
-                <Image src={Slipped} alt="slipped" width={300} height={300} />
+              <div className="flex items-center pb-8">
+                <Image src={Slipped} alt="slipped" width={200} height={200} />
                 Unfortunately, you got it wrong this time 😪
               </div>
             )}
           </div>
 
-          <div className="flex flex-col justify-start gap-2 rounded-2xl bg-white p-4 text-lg text-gray-700">
+          <p className="flex flex-col justify-start gap-2 rounded-2xl bg-white p-4 text-lg text-gray-700">
             <p>
-              The correct answer is{" "}
+              The answer is{" "}
               <span className="font-bold text-black">
-                {currentQuestion.correctAnswer}.
+                {currentQuestion.correctAnswer}
               </span>
             </p>
             <p className="italic">{currentQuestion.answerExplanation}</p>
-          </div>
+          </p>
 
           <div className="flex justify-end">
             <button
               onClick={handleNext}
-              className="mt-4 rounded bg-blue-400 px-4 py-2 text-white"
+              className="mt-4 rounded bg-black px-4 py-2 text-white transition duration-500 ease-in-out hover:-translate-y-1 hover:scale-110"
             >
-              Next
+              Next 🔥
             </button>
           </div>
-
-          {/* {showScore && "yay"} */}
         </div>
       )}
     </div>
