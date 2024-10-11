@@ -100,7 +100,7 @@ export default function Quiz() {
           <div className="flex justify-end">
             <button
               onClick={() => setCurrentQuestionIndex(0)}
-              className="duration-400 mt-4 rounded bg-black px-4 py-2 text-white transition ease-in-out hover:-translate-y-1 hover:scale-110"
+              className="mt-4 rounded bg-black px-4 py-2 text-white transition duration-500 ease-in-out hover:-translate-y-1 hover:scale-110"
             >
               Try Again 🔥
             </button>
